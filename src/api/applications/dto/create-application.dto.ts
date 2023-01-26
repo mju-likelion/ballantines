@@ -28,8 +28,8 @@ class PersonalInfo {
   @IsIn(['1', '2', '3', '4'])
   readonly grade: '1' | '2' | '3' | '4';
 
-  @IsIn(['enrolled', 'tookOff', 'postponed'])
-  readonly enrollmentStatus: 'enrolled' | 'tookOff' | 'postponed';
+  @IsIn(['재학', '휴학', '졸업유예'])
+  readonly enrollmentStatus: '재학' | '휴학' | '졸업유예';
 
   @IsIn(['web', 'server', 'design'])
   readonly part: 'web' | 'server' | 'design';
