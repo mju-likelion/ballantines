@@ -1,4 +1,15 @@
-import { Controller, Get, Post, Body, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipeBuilder,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 
@@ -9,6 +20,21 @@ export class ApplicationsController {
   @Post()
   create(@Body() createApplicationDto: CreateApplicationDto) {
     return this.applicationsService.create(createApplicationDto);
+  }
+
+  @Post('upload-cv')
+  @UseInterceptors(FileInterceptor('cv'))
+  uploadCv(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({ fileType: 'zip' })
+        // 10MB
+        .addMaxSizeValidator({ maxSize: 10 * 1024 * 1024 })
+        .build(),
+    )
+    cv: Express.Multer.File,
+  ) {
+    return this.applicationsService.uploadCv(cv);
   }
 
   @Get()

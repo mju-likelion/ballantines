@@ -7,6 +7,10 @@ export class ApplicationsService {
     return 'This action adds a new application';
   }
 
+  uploadCv(cv: Express.Multer.File) {
+    return 'This action uploads a CV';
+  }
+
   findAll() {
     return `This action returns all applications`;
   }
