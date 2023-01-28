@@ -7,6 +7,7 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseFilePipeBuilder,
+  Query,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -33,8 +34,9 @@ export class ApplicationsController {
         .build(),
     )
     cv: Express.Multer.File,
+    @Query('sid') sid: string,
   ) {
-    return this.applicationsService.uploadCv(cv);
+    return this.applicationsService.uploadCv(cv, sid);
   }
 
   @Get()
