@@ -1,5 +1,15 @@
 import { Type } from 'class-transformer';
-import { Equals, IsEmail, IsIn, IsString, Matches, MaxLength, MinLength, ValidateNested } from 'class-validator';
+import {
+  Equals,
+  IsEmail,
+  IsIn,
+  IsObject,
+  IsString,
+  Matches,
+  MaxLength,
+  MinLength,
+  ValidateNested,
+} from 'class-validator';
 
 class PersonalInfo {
   @IsString()
@@ -67,10 +77,12 @@ class ApplicationInfo {
 
 export class CreateApplicationDto {
   @Type(() => PersonalInfo)
+  @IsObject()
   @ValidateNested()
   personalInfo: PersonalInfo;
 
   @Type(() => ApplicationInfo)
+  @IsObject()
   @ValidateNested()
   applicationInfo: ApplicationInfo;
 }
