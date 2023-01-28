@@ -17,7 +17,7 @@ export class ApplicationEntity {
   @Column({ length: 11 })
   major: string;
 
-  @Column({ type: 'char', length: 8 })
+  @Column({ type: 'char', length: 8, unique: true })
   sid: string;
 
   @Column({ type: 'enum', enum: ['1', '2', '3', '4'] })
