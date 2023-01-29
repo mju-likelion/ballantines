@@ -1,13 +1,29 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 import { CreateApplicationDto } from './dto/create-application.dto';
+import { Application } from './application.entity';
 import { s3Client } from '../../lib/aws';
 
 @Injectable()
 export class ApplicationsService {
-  create(createApplicationDto: CreateApplicationDto) {
-    return 'This action adds a new application';
+  constructor(
+    @InjectRepository(Application)
+    private applicationRepository: Repository<Application>,
+  ) {}
+
+  async create(createApplicationDto: CreateApplicationDto) {
+    const { personalInfo, applicationInfo } = createApplicationDto;
+
+    const application = Application.from({
+      ...personalInfo,
+      ...applicationInfo,
+    });
+
+    const { id } = await this.applicationRepository.save(application);
+    return { id };
   }
 
   async uploadCv(cv: Express.Multer.File, sid: string) {

@@ -86,10 +86,10 @@ export class CreateApplicationDto {
   @Type(() => PersonalInfo)
   @IsObject()
   @ValidateNested()
-  personalInfo: PersonalInfo;
+  readonly personalInfo: PersonalInfo;
 
   @Type(() => ApplicationInfo)
   @IsObject()
   @ValidateNested()
-  applicationInfo: ApplicationInfo;
+  readonly applicationInfo: ApplicationInfo;
 }
