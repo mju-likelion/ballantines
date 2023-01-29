@@ -13,6 +13,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
+import { CvFileValidator } from './validators/cv-file.validator';
 
 @Controller('applications')
 export class ApplicationsController {
@@ -31,6 +32,7 @@ export class ApplicationsController {
         .addFileTypeValidator({ fileType: 'zip' })
         // 10MB
         .addMaxSizeValidator({ maxSize: 10 * 1024 * 1024 })
+        .addValidator(new CvFileValidator({ maxFilenameLength: 200 }))
         .build(),
     )
     cv: Express.Multer.File,
