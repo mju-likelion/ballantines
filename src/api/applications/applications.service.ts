@@ -11,7 +11,7 @@ export class ApplicationsService {
   }
 
   async uploadCv(cv: Express.Multer.File, sid: string) {
-    const filename = `${sid}-${cv.originalname}`;
+    const filename = `${sid}-${cv.originalname.replaceAll(' ', '-')}`;
     const path = `cv/${filename}`;
 
     try {
