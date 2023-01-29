@@ -6,8 +6,26 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
+type ApplicationForm = {
+  name: string;
+  phone: string;
+  email: string;
+  major: string;
+  sid: string;
+  grade: '1' | '2' | '3' | '4';
+  enrollmentStatus: '재학' | '휴학' | '졸업유예';
+  part: 'web' | 'server' | 'design';
+  cvUrl: string;
+  firstAnswer: string;
+  secondAnswer: string;
+  thirdAnswer: string;
+  fourthAnswer: string;
+  fifthAnswer: string;
+  sixthAnswer: string;
+};
+
 @Entity('Application')
-export class ApplicationEntity {
+export class Application {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -64,4 +82,43 @@ export class ApplicationEntity {
 
   @UpdateDateColumn()
   updatedDate: Date;
+
+  static from({
+    name,
+    phone,
+    email,
+    major,
+    sid,
+    grade,
+    enrollmentStatus,
+    part,
+    cvUrl,
+    firstAnswer,
+    secondAnswer,
+    thirdAnswer,
+    fourthAnswer,
+    fifthAnswer,
+    sixthAnswer,
+  }: ApplicationForm): Application {
+    const application = new Application();
+
+    application.name = name;
+    application.phone = phone;
+    application.email = email;
+    application.major = major;
+    application.sid = sid;
+    application.grade = grade;
+    application.enrollmentStatus = enrollmentStatus;
+    application.part = part;
+
+    application.cvUrl = cvUrl;
+    application.firstAnswer = firstAnswer;
+    application.secondAnswer = secondAnswer;
+    application.thirdAnswer = thirdAnswer;
+    application.fourthAnswer = fourthAnswer;
+    application.fifthAnswer = fifthAnswer;
+    application.sixthAnswer = sixthAnswer;
+
+    return application;
+  }
 }
