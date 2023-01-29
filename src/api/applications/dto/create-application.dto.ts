@@ -5,6 +5,7 @@ import {
   IsIn,
   IsObject,
   IsString,
+  IsUrl,
   Matches,
   MaxLength,
   MinLength,
@@ -48,8 +49,14 @@ class PersonalInfo {
   readonly personalInfoAgreement: true;
 }
 
+/**
+ * 문항은 최대 6개일 것이라고 가정
+ */
 class ApplicationInfo {
-  // 문항은 최대 6개일 것이라고 가정하고 진행
+  @IsUrl()
+  @MaxLength(512)
+  readonly cvUrl: string;
+
   @IsString()
   @MaxLength(1000)
   readonly firstAnswer: string;

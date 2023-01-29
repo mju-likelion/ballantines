@@ -1,4 +1,10 @@
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('Application')
 export class ApplicationEntity {
@@ -31,6 +37,9 @@ export class ApplicationEntity {
 
   @Column({ type: 'datetime', default: () => 'NOW()' })
   personalInfoAgreementDate: Date;
+
+  @Column({ length: 512 })
+  cvUrl: string;
 
   @Column({ nullable: true })
   firstAnswer: string;
