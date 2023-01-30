@@ -29,7 +29,7 @@ export class ApplicationsController {
   uploadCv(
     @UploadedFile(
       new ParseFilePipeBuilder()
-        .addFileTypeValidator({ fileType: 'zip' })
+        .addFileTypeValidator({ fileType: /html|zip/ })
         // 10MB
         .addMaxSizeValidator({ maxSize: 10 * 1024 * 1024 })
         .addValidator(new CvFileValidator({ maxFilenameLength: 200 }))
