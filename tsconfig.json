@@ -16,6 +16,8 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    // String.replaceAll() 을 사용하기 위해 추가
+    "lib": ["es2021"]
   }
 }

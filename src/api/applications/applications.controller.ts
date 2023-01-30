@@ -1,7 +1,19 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Param,
+  UseInterceptors,
+  UploadedFile,
+  ParseFilePipeBuilder,
+  Query,
+} from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
+import { CvFileValidator } from './validators/cv-file.validator';
 
 @Controller('applications')
 export class ApplicationsController {
@@ -12,6 +24,23 @@ export class ApplicationsController {
     return this.applicationsService.create(createApplicationDto);
   }
 
+  @Post('upload-cv')
+  @UseInterceptors(FileInterceptor('cv'))
+  uploadCv(
+    @UploadedFile(
+      new ParseFilePipeBuilder()
+        .addFileTypeValidator({ fileType: /html|zip/ })
+        // 10MB
+        .addMaxSizeValidator({ maxSize: 10 * 1024 * 1024 })
+        .addValidator(new CvFileValidator({ maxFilenameLength: 200 }))
+        .build(),
+    )
+    cv: Express.Multer.File,
+    @Query('sid') sid: string,
+  ) {
+    return this.applicationsService.uploadCv(cv, sid);
+  }
+
   @Get()
   findAll() {
     return this.applicationsService.findAll();
@@ -20,15 +49,5 @@ export class ApplicationsController {
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.applicationsService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateApplicationDto: UpdateApplicationDto) {
-    return this.applicationsService.update(+id, updateApplicationDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.applicationsService.remove(+id);
   }
 }

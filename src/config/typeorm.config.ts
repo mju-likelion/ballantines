@@ -10,4 +10,5 @@ export const generateTypeOrmConfig: GenerateTypeOrmConfig = env => ({
   password: env.DATABASE_PASSWORD,
   database: env.DATABASE_NAME,
   synchronize: env.NODE_ENV === 'development',
+  autoLoadEntities: true,
 });
