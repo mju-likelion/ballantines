@@ -33,7 +33,7 @@ export class ApplicationsController {
         // 10MB
         .addMaxSizeValidator({ maxSize: 10 * 1024 * 1024 })
         .addValidator(new CvFileValidator({ maxFilenameLength: 200 }))
-        .build(),
+        .build({ fileIsRequired: true }),
     )
     cv: Express.Multer.File,
     @Query('sid') sid: string,
