@@ -14,6 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { CvFileValidator } from './validators/cv-file.validator';
+import { ApiBody, ApiConsumes } from '@nestjs/swagger';
 
 @Controller('applications')
 export class ApplicationsController {
@@ -24,6 +25,19 @@ export class ApplicationsController {
     return this.applicationsService.create(createApplicationDto);
   }
 
+  @ApiConsumes('multipart/form-data')
+  @ApiBody({
+    schema: {
+      type: 'object',
+      properties: {
+        cv: {
+          type: 'string',
+          format: 'binary',
+        },
+      },
+      required: ['cv'],
+    },
+  })
   @Post('upload-cv')
   @UseInterceptors(FileInterceptor('cv'))
   uploadCv(
