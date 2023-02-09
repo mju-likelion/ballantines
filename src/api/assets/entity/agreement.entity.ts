@@ -1,13 +1,27 @@
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Transform } from 'class-transformer';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 @Entity('Agreement')
 export class Agreement {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
-  updatedAt: string;
+  @UpdateDateColumn({
+    type: 'timestamp',
+  })
+  updatedAt: Date;
 
-  @Column()
+  @CreateDateColumn({
+    type: 'timestamp',
+  })
+  createAt: Date;
+
+  @Column({ length: 6000 })
   agreementContent: string;
 }

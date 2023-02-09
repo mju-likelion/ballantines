@@ -1,18 +1,30 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Post } from '@nestjs/common';
 import { AssetsService } from './assets.service';
-import { Part } from './dto/get-questions.dto';
 
 @Controller('assets')
 export class AssetsController {
   constructor(private readonly assetsService: AssetsService) {}
 
   @Get('questions/:part')
-  getQuestions(@Param() part: Part) {
+  getQuestions(
+    @Param('part')
+    part: string,
+  ) {
     return this.assetsService.getQuestions(part);
   }
 
-  @Get('agreement')
+  @Get('agreements')
   getAgreement() {
     return this.assetsService.getAgreement();
+  }
+
+  @Post('agreements')
+  setAgreement() {
+    return this.assetsService.setAgreement();
+  }
+
+  @Post('question')
+  setQuestion() {
+    return this.assetsService.setQuestions();
   }
 }
