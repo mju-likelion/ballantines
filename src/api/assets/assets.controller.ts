@@ -23,7 +23,7 @@ export class AssetsController {
     return this.assetsService.setAgreement();
   }
 
-  @Post('question')
+  @Post('questions')
   setQuestion() {
     return this.assetsService.setQuestions();
   }

@@ -12,5 +12,8 @@ export class Question {
   maxLength: number;
 
   @Column({ select: false })
+  order: number;
+
+  @Column({ select: false })
   part: string;
 }

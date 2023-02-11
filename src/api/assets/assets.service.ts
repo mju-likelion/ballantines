@@ -27,12 +27,19 @@ export class AssetsService {
 
     const commonQuestions = await this.questionRepository.find({
       where: { part: 'common' },
+      order: {
+        order: 'ASC',
+      },
     });
-    const questionArray = await this.questionRepository.find({
+    const partQuestions = await this.questionRepository.find({
       where: { part },
+      order: {
+        order: 'ASC',
+      },
     });
 
-    const resultQuestions = commonQuestions.concat(questionArray);
+    const resultQuestions = [...commonQuestions, ...partQuestions];
+
     return {
       part,
       resultQuestions,
@@ -50,8 +57,11 @@ export class AssetsService {
   setQuestions() {
     const keys = Questions && Object.keys(Questions || {});
     keys?.map(part => {
-      Questions[part]?.map(async question => {
-        await this.questionRepository.save(question);
+      Questions[part]?.map(async (question, idx) => {
+        await this.questionRepository.save({
+          ...question,
+          order: idx + 1,
+        });
       });
     });
   }
