@@ -1,5 +1,6 @@
 import { Controller, Get, Param, Post } from '@nestjs/common';
 import { AssetsService } from './assets.service';
+import { Part } from './dto/find-question.dto';
 
 @Controller('assets')
 export class AssetsController {
@@ -7,10 +8,10 @@ export class AssetsController {
 
   @Get('questions/:part')
   findQuestions(
-    @Param('part')
-    part: string,
+    @Param()
+    param: Part,
   ) {
-    return this.assetsService.findQuestions(part);
+    return this.assetsService.findQuestions(param.part);
   }
 
   @Get('agreements')

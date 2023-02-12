@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { Agreement } from './entity/agreement.entity';
 import { Question } from './entity/question.entity';
 import { Questions, AgreementData } from './data';
-import { BadRequestException } from '@nestjs/common/exceptions';
 
 @Injectable()
 export class AssetsService {
@@ -15,16 +14,7 @@ export class AssetsService {
     private readonly questionRepository: Repository<Question>,
   ) {}
 
-  async findQuestions(part: string) {
-    if (!['web', 'server', 'design'].includes(part)) {
-      throw new BadRequestException({
-        errors: {
-          title: 'INVALID_PART_NAME',
-          detail: '유효하지 않은 파트입니다.',
-        },
-      });
-    }
-
+  async findQuestions(part) {
     const commonQuestions = await this.questionRepository.find({
       where: { part: 'common' },
       order: {
