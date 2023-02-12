@@ -12,12 +12,12 @@ export class Agreement {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @CreateDateColumn()
-  createAt: Date;
-
   @Column({ length: 6000 })
   agreementContent: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

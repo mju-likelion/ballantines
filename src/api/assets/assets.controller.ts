@@ -6,25 +6,25 @@ export class AssetsController {
   constructor(private readonly assetsService: AssetsService) {}
 
   @Get('questions/:part')
-  getQuestions(
+  findQuestions(
     @Param('part')
     part: string,
   ) {
-    return this.assetsService.getQuestions(part);
+    return this.assetsService.findQuestions(part);
   }
 
   @Get('agreements')
-  getAgreement() {
-    return this.assetsService.getAgreement();
+  findAgreement() {
+    return this.assetsService.findAgreement();
   }
 
   @Post('agreements')
-  setAgreement() {
-    return this.assetsService.setAgreement();
+  createAgreement() {
+    return this.assetsService.createAgreement();
   }
 
   @Post('questions')
-  setQuestion() {
-    return this.assetsService.setQuestions();
+  createQuestion() {
+    return this.assetsService.createQuestions();
   }
 }

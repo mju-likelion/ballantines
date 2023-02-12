@@ -15,7 +15,7 @@ export class AssetsService {
     private readonly questionRepository: Repository<Question>,
   ) {}
 
-  async getQuestions(part: string) {
+  async findQuestions(part: string) {
     if (!['web', 'server', 'design'].includes(part)) {
       throw new BadRequestException({
         errors: {
@@ -46,21 +46,21 @@ export class AssetsService {
     };
   }
 
-  async getAgreement() {
+  async findAgreement() {
     return await this.agreementRepository.find();
   }
 
-  async setAgreement() {
+  async createAgreement() {
     await this.agreementRepository.save(AgreementData);
   }
 
-  setQuestions() {
+  createQuestions() {
     const keys = Questions && Object.keys(Questions || {});
     keys?.map(part => {
-      Questions[part]?.map(async (question, idx) => {
+      Questions[part]?.map(async (question, index) => {
         await this.questionRepository.save({
           ...question,
-          order: idx + 1,
+          order: index + 1,
         });
       });
     });
