@@ -86,9 +86,6 @@ class PersonalInfo {
   readonly personalInfoAgreement: true;
 }
 
-/**
- * 문항은 최대 6개일 것이라고 가정
- */
 class ApplicationInfo {
   @ApiProperty({
     example: 'https://example.com/cv.zip',
@@ -137,14 +134,6 @@ class ApplicationInfo {
   @IsString()
   @MaxLength(1000)
   readonly fifthAnswer: string;
-
-  @ApiProperty({
-    example: '여섯 번째 문항 답변입니다.',
-    description: '여섯 번째 문항 답변 (1000자 이하)',
-  })
-  @IsString()
-  @MaxLength(1000)
-  readonly sixthAnswer: string;
 }
 
 export class CreateApplicationDto {

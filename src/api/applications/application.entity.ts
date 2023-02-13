@@ -21,7 +21,6 @@ type ApplicationForm = {
   thirdAnswer: string;
   fourthAnswer: string;
   fifthAnswer: string;
-  sixthAnswer: string;
 };
 
 @Entity('Application')
@@ -74,9 +73,6 @@ export class Application {
   @Column({ nullable: true })
   fifthAnswer: string;
 
-  @Column({ nullable: true })
-  sixthAnswer: string;
-
   @CreateDateColumn()
   createdDate: Date;
 
@@ -98,7 +94,6 @@ export class Application {
     thirdAnswer,
     fourthAnswer,
     fifthAnswer,
-    sixthAnswer,
   }: ApplicationForm): Application {
     const application = new Application();
 
@@ -117,7 +112,6 @@ export class Application {
     application.thirdAnswer = thirdAnswer;
     application.fourthAnswer = fourthAnswer;
     application.fifthAnswer = fifthAnswer;
-    application.sixthAnswer = sixthAnswer;
 
     return application;
   }
