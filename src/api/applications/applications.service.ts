@@ -1,5 +1,5 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, HttpException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -16,6 +16,27 @@ export class ApplicationsService {
 
   async create(createApplicationDto: CreateApplicationDto) {
     const { personalInfo, applicationInfo } = createApplicationDto;
+
+    // 디지몬 파트가 아닌데 자기소개서가 없으면 400 에러
+    if (personalInfo.part !== 'design') {
+      const errors: string[] = [];
+
+      if (!applicationInfo.cvUrl) {
+        errors.push(
+          "applicationInfo.cvUrl must be exist when personalInfo.part isn't design",
+        );
+      }
+
+      if (!applicationInfo.fifthAnswer) {
+        errors.push(
+          "applicationInfo.fifthAnswer must be exist when personalInfo.part isn't design",
+        );
+      }
+
+      if (errors.length > 0) {
+        throw new BadRequestException(errors);
+      }
+    }
 
     const application = Application.from({
       ...personalInfo,
