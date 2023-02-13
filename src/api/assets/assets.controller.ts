@@ -18,14 +18,4 @@ export class AssetsController {
   findAgreement() {
     return this.assetsService.findAgreement();
   }
-
-  @Post('agreements')
-  createAgreement() {
-    return this.assetsService.createAgreement();
-  }
-
-  @Post('questions')
-  createQuestion() {
-    return this.assetsService.createQuestions();
-  }
 }

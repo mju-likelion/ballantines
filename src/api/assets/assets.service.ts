@@ -3,7 +3,6 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Agreement } from './entity/agreement.entity';
 import { Question } from './entity/question.entity';
-import { Questions, AgreementData } from './data';
 
 @Injectable()
 export class AssetsService {
@@ -38,21 +37,5 @@ export class AssetsService {
 
   async findAgreement() {
     return await this.agreementRepository.find();
-  }
-
-  async createAgreement() {
-    await this.agreementRepository.save(AgreementData);
-  }
-
-  createQuestions() {
-    const keys = Questions && Object.keys(Questions || {});
-    keys?.map(part => {
-      Questions[part]?.map(async (question, index) => {
-        await this.questionRepository.save({
-          ...question,
-          order: index + 1,
-        });
-      });
-    });
   }
 }
