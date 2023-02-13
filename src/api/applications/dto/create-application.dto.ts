@@ -5,6 +5,7 @@ import {
   IsEmail,
   IsIn,
   IsObject,
+  IsOptional,
   IsString,
   IsUrl,
   Matches,
@@ -91,6 +92,7 @@ class ApplicationInfo {
     example: 'https://example.com/cv.zip',
     description: '자기소개서 링크 (URL)',
   })
+  @IsOptional()
   @IsUrl()
   @MaxLength(512)
   readonly cvUrl: string;
@@ -131,6 +133,8 @@ class ApplicationInfo {
     example: '다섯 번째 문항 답변입니다.',
     description: '다섯 번째 문항 답변 (1000자 이하)',
   })
+  // 디지몬 파트는 다섯 번째 문항이 없으므로 Optional
+  @IsOptional()
   @IsString()
   @MaxLength(1000)
   readonly fifthAnswer: string;
