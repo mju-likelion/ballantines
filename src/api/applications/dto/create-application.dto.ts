@@ -141,11 +141,13 @@ class ApplicationInfo {
 }
 
 export class CreateApplicationDto {
+  @ApiProperty()
   @Type(() => PersonalInfo)
   @IsObject()
   @ValidateNested()
   readonly personalInfo: PersonalInfo;
 
+  @ApiProperty()
   @Type(() => ApplicationInfo)
   @IsObject()
   @ValidateNested()
