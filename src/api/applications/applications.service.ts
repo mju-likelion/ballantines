@@ -22,14 +22,20 @@ export class ApplicationsService {
     const { personalInfo, applicationInfo } = createApplicationDto;
 
     const conflictErrors: string[] = [];
-    const [samePhoneUser] = await this.applicationRepository.findBy({
-      phone: personalInfo.phone,
+    const samePhoneUser = await this.applicationRepository.findOne({
+      where: {
+        phone: personalInfo.phone,
+      },
     });
-    const [sameEmailUser] = await this.applicationRepository.findBy({
-      email: personalInfo.email,
+    const sameEmailUser = await this.applicationRepository.findOne({
+      where: {
+        email: personalInfo.email,
+      },
     });
-    const [sameSidUser] = await this.applicationRepository.findBy({
-      sid: personalInfo.sid,
+    const sameSidUser = await this.applicationRepository.findOne({
+      where: {
+        sid: personalInfo.sid,
+      },
     });
 
     if (samePhoneUser) {
