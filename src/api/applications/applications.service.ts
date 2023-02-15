@@ -1,5 +1,9 @@
 import { PutObjectCommand } from '@aws-sdk/client-s3';
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
@@ -16,6 +20,58 @@ export class ApplicationsService {
 
   async create(createApplicationDto: CreateApplicationDto) {
     const { personalInfo, applicationInfo } = createApplicationDto;
+
+    const conflictErrors: string[] = [];
+    const samePhoneUser = await this.applicationRepository.findOne({
+      where: {
+        phone: personalInfo.phone,
+      },
+    });
+    const sameEmailUser = await this.applicationRepository.findOne({
+      where: {
+        email: personalInfo.email,
+      },
+    });
+    const sameSidUser = await this.applicationRepository.findOne({
+      where: {
+        sid: personalInfo.sid,
+      },
+    });
+
+    if (samePhoneUser) {
+      conflictErrors.push(`phone ${personalInfo.phone} is already exist`);
+    }
+    if (sameEmailUser) {
+      conflictErrors.push(`email ${personalInfo.email} is already exist`);
+    }
+    if (sameSidUser) {
+      conflictErrors.push(`sid ${personalInfo.sid} is already exist`);
+    }
+
+    if (conflictErrors.length > 0) {
+      throw new ConflictException(conflictErrors);
+    }
+
+    // 디지몬 파트가 아닌데 자기소개서 페이지 파일이 없으면 400 에러
+    if (personalInfo.part !== 'design') {
+      const errors: string[] = [];
+
+      if (!applicationInfo.cvUrl) {
+        errors.push(
+          "applicationInfo.cvUrl must be exist when personalInfo.part isn't design",
+        );
+      }
+
+      if (!applicationInfo.fifthAnswer) {
+        errors.push(
+          "applicationInfo.fifthAnswer must be exist when personalInfo.part isn't design",
+        );
+      }
+
+      if (errors.length > 0) {
+        throw new BadRequestException(errors);
+      }
+    }
 
     const application = Application.from({
       ...personalInfo,
