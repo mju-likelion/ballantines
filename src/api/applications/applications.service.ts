@@ -52,7 +52,7 @@ export class ApplicationsService {
       throw new ConflictException(conflictErrors);
     }
 
-    // 디지몬 파트가 아닌데 자기소개서가 없으면 400 에러
+    // 디지몬 파트가 아닌데 자기소개서 페이지 파일이 없으면 400 에러
     if (personalInfo.part !== 'design') {
       const errors: string[] = [];
 
