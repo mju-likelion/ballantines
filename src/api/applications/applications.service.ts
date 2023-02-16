@@ -106,11 +106,39 @@ export class ApplicationsService {
     }
   }
 
-  findAll() {
-    return `This action returns all applications`;
+  async findAll(pageNum: number) {
+    const PAGE_SIZE = 10;
+    const totalApplications = await this.applicationRepository.find();
+    const totalCount = totalApplications.length;
+    //총 개수를 구할 수 있는 더 효율적인 방법..?
+    const totalPage = Math.ceil(totalCount / PAGE_SIZE);
+    if (!pageNum || totalPage < pageNum) {
+      throw new BadRequestException('Invalid page number');
+    }
+
+    const targetApplications = await this.applicationRepository.find({
+      skip: (pageNum - 1) * 10,
+      take: PAGE_SIZE,
+    });
+
+    return {
+      meta: {
+        pageSize: PAGE_SIZE,
+        totalCount,
+        totalPage,
+        currentPage: pageNum,
+      },
+      data: targetApplications,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} application`;
+  async findOne(id: string) {
+    const targetApplication = await this.applicationRepository.findOne({
+      where: { id },
+    });
+    if (!targetApplication) {
+      throw new BadRequestException('Invalid ID');
+    }
+    return targetApplication;
   }
 }

@@ -56,12 +56,12 @@ export class ApplicationsController {
   }
 
   @Get()
-  findAll() {
-    return this.applicationsService.findAll();
+  findAll(@Query('page') pageNum) {
+    return this.applicationsService.findAll(+pageNum);
   }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.applicationsService.findOne(+id);
+    return this.applicationsService.findOne(id);
   }
 }
