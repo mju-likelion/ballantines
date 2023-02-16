@@ -21,6 +21,7 @@
     "prepare": "husky install"
   },
   "dependencies": {
+    "@anchan828/nest-sendgrid": "^0.6.30",
     "@aws-sdk/client-s3": "^3.259.0",
     "@aws-sdk/credential-provider-node": "^3.259.0",
     "@nestjs/common": "^9.0.0",
