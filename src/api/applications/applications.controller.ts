@@ -15,6 +15,7 @@ import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { CvFileValidator } from './validators/cv-file.validator';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { PagenationOptions } from './dto/find-application.dto';
 
 @Controller('applications')
 export class ApplicationsController {
@@ -56,8 +57,8 @@ export class ApplicationsController {
   }
 
   @Get()
-  findAll(@Query('page') pageNum) {
-    return this.applicationsService.findAll(+pageNum);
+  findAll(@Query() pagenationOptions: PagenationOptions) {
+    return this.applicationsService.findAll(pagenationOptions);
   }
 
   @Get(':id')

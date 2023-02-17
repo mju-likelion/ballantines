@@ -10,6 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
 import { s3Client } from '../../lib/aws';
+import { PagenationOptions } from './dto/find-application.dto';
 
 @Injectable()
 export class ApplicationsService {
@@ -106,19 +107,43 @@ export class ApplicationsService {
     }
   }
 
-  async findAll(pageNum: number) {
+  async findAll(pagenationOptions: PagenationOptions) {
+    const { page, part, sort } = pagenationOptions;
     const PAGE_SIZE = 10;
-    const totalApplications = await this.applicationRepository.find();
+    const totalApplications = await this.applicationRepository.find({
+      ...(part && {
+        where: { part },
+      }),
+    });
     const totalCount = totalApplications.length;
     //총 개수를 구할 수 있는 더 효율적인 방법..?
     const totalPage = Math.ceil(totalCount / PAGE_SIZE);
-    if (!pageNum || totalPage < pageNum) {
+    if (!page || totalPage < +page) {
       throw new BadRequestException('Invalid page number');
     }
 
     const targetApplications = await this.applicationRepository.find({
-      skip: (pageNum - 1) * 10,
+      skip: (+page - 1) * 10,
       take: PAGE_SIZE,
+      ...(part && {
+        where: {
+          part,
+        },
+      }),
+
+      ...(sort && {
+        ...(sort === 'name_asc'
+          ? {
+              order: {
+                name: 'ASC',
+              },
+            }
+          : {
+              order: {
+                createdDate: 'ASC',
+              },
+            }),
+      }),
     });
 
     return {
@@ -126,7 +151,7 @@ export class ApplicationsService {
         pageSize: PAGE_SIZE,
         totalCount,
         totalPage,
-        currentPage: pageNum,
+        currentPage: +page,
       },
       data: targetApplications,
     };
