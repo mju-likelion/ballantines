@@ -118,14 +118,12 @@ export class ApplicationsService {
   async findAll(pagenationOptions: PagenationOptions) {
     const { page, part, sort } = pagenationOptions;
     const PAGE_SIZE = 10;
-    const totalApplications = await this.applicationRepository.find({
+    const totalApplicationsCount = await this.applicationRepository.count({
       ...(part && {
         where: { part },
       }),
     });
-    const totalCount = totalApplications.length;
-    //총 개수를 구할 수 있는 더 효율적인 방법..?
-    const totalPage = Math.ceil(totalCount / PAGE_SIZE);
+    const totalPage = Math.ceil(totalApplicationsCount / PAGE_SIZE);
     if (!page || totalPage < +page) {
       throw new BadRequestException('Invalid page number');
     }
@@ -149,7 +147,7 @@ export class ApplicationsService {
     return {
       meta: {
         pageSize: PAGE_SIZE,
-        totalCount,
+        totalApplicationsCount,
         totalPage,
         currentPage: +page,
       },
