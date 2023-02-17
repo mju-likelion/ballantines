@@ -35,7 +35,8 @@ export class UserService {
     console.log(
       `${email}. db에 추가. 회원이름 : ${name}, 랜덤코드: ${randomCode}`,
     );
-    return await this.saveManager(email, name, userInform, randomCode);
+    const userId = await this.saveManager(email, name, userInform, randomCode);
+    return { userId };
   }
   private async saveManager(
     email: string,
@@ -70,6 +71,7 @@ export class UserService {
     } else if (managerExist.password) {
       throw new BadRequestException('User password is arleady reigistered');
     }
-    return await this.managerRepository.update({ email }, { password });
+    await this.managerRepository.update({ email }, { password });
+    return;
   }
 }
