@@ -11,6 +11,6 @@ export class PagenationOptions {
 
   @IsOptional()
   @IsString()
-  @IsIn(['name_asc', 'created_asc'])
+  @IsIn(['name_asc', 'createdDate_asc', 'name_desc', 'createdDate_desc'])
   sort?: string;
 }

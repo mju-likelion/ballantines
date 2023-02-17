@@ -107,6 +107,14 @@ export class ApplicationsService {
     }
   }
 
+  getOrderObject(sortOptions) {
+    if (!sortOptions) return null;
+    const [option, orderValue] = sortOptions.split('_');
+    return {
+      [option]: orderValue,
+    };
+  }
+
   async findAll(pagenationOptions: PagenationOptions) {
     const { page, part, sort } = pagenationOptions;
     const PAGE_SIZE = 10;
@@ -122,6 +130,8 @@ export class ApplicationsService {
       throw new BadRequestException('Invalid page number');
     }
 
+    const sortOptions = this.getOrderObject(sort);
+
     const targetApplications = await this.applicationRepository.find({
       skip: (+page - 1) * 10,
       take: PAGE_SIZE,
@@ -132,17 +142,7 @@ export class ApplicationsService {
       }),
 
       ...(sort && {
-        ...(sort === 'name_asc'
-          ? {
-              order: {
-                name: 'ASC',
-              },
-            }
-          : {
-              order: {
-                createdDate: 'ASC',
-              },
-            }),
+        order: sortOptions,
       }),
     });
 
