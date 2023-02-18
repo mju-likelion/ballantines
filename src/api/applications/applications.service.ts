@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
 import { s3Client } from '../../lib/aws';
-import { PagenationOptions } from './dto/find-application.dto';
+import { PaginationQueryDTO, SortOptions } from './dto/PaginationQueryDTO';
 
 @Injectable()
 export class ApplicationsService {
@@ -115,16 +115,17 @@ export class ApplicationsService {
     };
   }
 
-  async findAll(pagenationOptions: PagenationOptions) {
-    const { page, part, sort } = pagenationOptions;
+  async findAll(paginationQueryDTO: PaginationQueryDTO) {
+    const { page, part, sort } = paginationQueryDTO;
     const PAGE_SIZE = 10;
     const totalApplicationsCount = await this.applicationRepository.count({
       ...(part && {
         where: { part },
       }),
     });
+
     const totalPage = Math.ceil(totalApplicationsCount / PAGE_SIZE);
-    if (!page || totalPage < +page) {
+    if (!page || totalPage < page) {
       throw new BadRequestException('Invalid page number');
     }
 

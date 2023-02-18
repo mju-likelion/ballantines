@@ -8,6 +8,8 @@ import {
   UploadedFile,
   ParseFilePipeBuilder,
   Query,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
@@ -15,7 +17,7 @@ import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { CvFileValidator } from './validators/cv-file.validator';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
-import { PagenationOptions } from './dto/find-application.dto';
+import { PaginationQueryDTO } from './dto/PaginationQueryDTO';
 
 @Controller('applications')
 export class ApplicationsController {
@@ -57,8 +59,10 @@ export class ApplicationsController {
   }
 
   @Get()
-  findAll(@Query() pagenationOptions: PagenationOptions) {
-    return this.applicationsService.findAll(pagenationOptions);
+  @UsePipes(new ValidationPipe({ transform: true }))
+  //page를 number로 사용하기 위해서 추가
+  findAll(@Query() paginationQueryDTO: PaginationQueryDTO) {
+    return this.applicationsService.findAll(paginationQueryDTO);
   }
 
   @Get(':id')
