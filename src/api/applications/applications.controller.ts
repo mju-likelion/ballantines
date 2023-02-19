@@ -15,6 +15,7 @@ import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { CvFileValidator } from './validators/cv-file.validator';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { SubmitCheckQueryDto } from './dto/submit-check-query.dto';
 
 @Controller('applications')
 export class ApplicationsController {
@@ -53,6 +54,11 @@ export class ApplicationsController {
     @Query('sid') sid: string,
   ) {
     return this.applicationsService.uploadCv(cv, sid);
+  }
+
+  @Get('submit-check')
+  submitCheck(@Query() { sid, name }: SubmitCheckQueryDto) {
+    return this.applicationsService.submitCheck(sid, name);
   }
 
   @Get()
