@@ -9,6 +9,7 @@ export const validationSchema = Joi.object({
   AWS_ACCESS_KEY_ID: Joi.string().required(),
   AWS_SECRET_ACCESS_KEY: Joi.string().required(),
   AWS_S3_BUCKET_URL: Joi.string().required(),
+  CORS_WHITELIST_REGEX: Joi.string().required(),
   DATABASE_HOST: Joi.string().required(),
   DATABASE_PORT: Joi.number().port().default(3306),
   DATABASE_USERNAME: Joi.string().required(),
