@@ -3,6 +3,7 @@ import {
   BadRequestException,
   ConflictException,
   Injectable,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -104,6 +105,24 @@ export class ApplicationsService {
         error: e.Code,
       };
     }
+  }
+
+  async submitCheck(sid: string, name: string) {
+    const application = await this.applicationRepository.findOne({
+      where: {
+        sid,
+      },
+    });
+
+    if (!application || application.name !== name) {
+      throw new NotFoundException(
+        `Application with given sid and name combination is not found`,
+      );
+    }
+
+    return {
+      submitted: true,
+    };
   }
 
   findAll() {
