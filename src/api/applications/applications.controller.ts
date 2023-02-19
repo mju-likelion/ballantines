@@ -14,7 +14,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { CvFileValidator } from './validators/cv-file.validator';
-import { ApiBody, ApiConsumes } from '@nestjs/swagger';
+import { ApiBody, ApiConsumes, ApiResponse } from '@nestjs/swagger';
 import { SubmitCheckQueryDto } from './dto/submit-check-query.dto';
 
 @Controller('applications')
@@ -57,6 +57,15 @@ export class ApplicationsController {
   }
 
   @Get('submit-check')
+  @ApiResponse({ status: 200, description: '지원서 제출이 정상적으로 완료됨.' })
+  @ApiResponse({
+    status: 400,
+    description: '주어진 sid, name 형태가 적합하지 않음.',
+  })
+  @ApiResponse({
+    status: 404,
+    description: '주어진 sid, name 조합의 지원서가 존재하지 않음.',
+  })
   submitCheck(@Query() { sid, name }: SubmitCheckQueryDto) {
     return this.applicationsService.submitCheck(sid, name);
   }
