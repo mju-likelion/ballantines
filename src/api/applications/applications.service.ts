@@ -107,14 +107,6 @@ export class ApplicationsService {
     }
   }
 
-  findAll() {
-    return `This action returns all applications`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} application`;
-  }
-
   async submitCheck(sid: string, name: string) {
     const application = await this.applicationRepository.findOne({
       where: {
@@ -131,5 +123,13 @@ export class ApplicationsService {
     return {
       submitted: true,
     };
+  }
+
+  findAll() {
+    return `This action returns all applications`;
+  }
+
+  findOne(id: number) {
+    return `This action returns a #${id} application`;
   }
 }
