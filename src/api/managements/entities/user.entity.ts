@@ -3,8 +3,8 @@ import { Column, Entity, PrimaryColumn, PrimaryGeneratedColumn } from 'typeorm';
 type ManagerForm = {
   name: string;
   email: string;
-  userInform: 'manager' | 'member';
-  randomCode: string;
+  managerInform: 'manager' | 'rep';
+  verifyToken: string;
 };
 
 @Entity('Managers')
@@ -21,18 +21,23 @@ export class Manager {
   @Column()
   password: string;
 
-  @Column({ type: 'enum', enum: ['manager', 'member'] })
-  userinform: 'manager' | 'member';
+  @Column({ type: 'enum', enum: ['manager', 'rep'] })
+  managerInform: 'manager' | 'rep';
 
   @Column()
-  verifytoken: string;
+  verifyToken: string;
 
-  static from({ name, email, userInform, randomCode }: ManagerForm): Manager {
+  static from({
+    name,
+    email,
+    managerInform,
+    verifyToken,
+  }: ManagerForm): Manager {
     const manager = new Manager();
     manager.email = email;
     manager.name = name;
-    manager.userinform = userInform;
-    manager.verifytoken = randomCode;
+    manager.managerInform = managerInform;
+    manager.verifyToken = verifyToken;
     return manager;
   }
 }

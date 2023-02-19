@@ -1,6 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
 import { UserService } from './managements.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { SendEmailDto } from './dto/send-email.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 
 @Controller('management')
@@ -8,15 +8,15 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post('send-email')
-  async sendEmail(@Body() createUserDto: CreateUserDto) {
-    const { email, name, userInform } = createUserDto;
+  async sendEmail(@Body() sendEmailDto: SendEmailDto) {
+    const { email, name, managerInform } = sendEmailDto;
 
-    return await this.userService.sendEmail(email, name, userInform);
+    return await this.userService.sendEmail(email, name, managerInform);
   }
 
-  @Post('regist')
+  @Post('register')
   async registManager(@Body() updateUserDto: UpdateUserDto) {
-    const { email, password, randomCode } = updateUserDto;
-    return await this.userService.registManager(email, password, randomCode);
+    const { email, password, verifyToken } = updateUserDto;
+    return await this.userService.registManager(email, password, verifyToken);
   }
 }

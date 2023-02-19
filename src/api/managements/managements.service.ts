@@ -21,7 +21,7 @@ export class UserService {
   async sendEmail(
     email: string,
     name: string,
-    userInform: 'manager' | 'member',
+    managerInform: 'manager' | 'rep',
   ) {
     // DB에서 이메일 중복성 확인
     const managerExist = await this.managerRepository.findOne({
@@ -30,29 +30,36 @@ export class UserService {
     if (managerExist) {
       throw new BadRequestException('User is arleady exist');
     }
-    const randomCode = await this.generateRandomCode();
-    await this.emailService.sendVerifyCodeEmail(email, name, randomCode);
+    const verifyToken = await this.generateRandomCode();
+    await this.emailService.sendVerifyCodeEmail(email, name, verifyToken);
     console.log(
-      `${email}. db에 추가. 회원이름 : ${name}, 랜덤코드: ${randomCode}`,
+      `${email}. db에 추가. 회원이름 : ${name}, 랜덤코드: ${verifyToken}`,
     );
-    const userId = await this.saveManager(email, name, userInform, randomCode);
+    const userId = await this.saveManager(
+      email,
+      name,
+      managerInform,
+      verifyToken,
+    );
     return { userId };
   }
+
   private async saveManager(
     email: string,
     name: string,
-    userInform: 'manager' | 'member',
-    randomCode: string,
+    managerInform: 'manager' | 'rep',
+    verifyToken: string,
   ) {
     const manager = Manager.from({
       email,
       name,
-      userInform,
-      randomCode,
+      managerInform,
+      verifyToken,
     });
     const { id } = await this.managerRepository.save(manager);
     return id;
   }
+
   private async generateRandomCode() {
     let randomCode = '';
     for (let i = 0; i < 6; i++) {
@@ -62,9 +69,9 @@ export class UserService {
     return randomCode;
   }
 
-  async registManager(email: string, password: string, randomCode: string) {
+  async registManager(email: string, password: string, verifyToken: string) {
     const managerExist = await this.managerRepository.findOne({
-      where: { email, verifytoken: randomCode },
+      where: { email, verifyToken },
     });
     if (!managerExist) {
       throw new NotFoundException('User is not exist');
@@ -72,6 +79,8 @@ export class UserService {
       throw new BadRequestException('User password is arleady reigistered');
     }
     await this.managerRepository.update({ email }, { password });
-    return;
+    return {
+      id: managerExist.id,
+    };
   }
 }

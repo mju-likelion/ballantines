@@ -12,6 +12,7 @@ export class EmailService {
       this.generateCodeEmail(code),
     );
   }
+
   private generateCodeEmail(code: string) {
     return `<h1>Hello<h1> 
     <h3>please click this link<h3>
