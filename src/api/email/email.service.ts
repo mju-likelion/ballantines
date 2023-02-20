@@ -30,7 +30,6 @@ export class EmailService {
       html,
     };
     await this.sendGrid.send(mail);
-    console.log(`E-Mail sent to ${mail.to}`);
     return;
   }
 }

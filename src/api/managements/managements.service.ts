@@ -7,22 +7,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EmailService } from '../email/email.service';
 import { Manager } from './entities/user.entity';
-
+import * as nanoid from 'nanoid';
+import { AuthService } from '../auth/auth.service';
 @Injectable()
-export class UserService {
+export class ManagerService {
   constructor(
-    private readonly emailService: EmailService,
+    private emailService: EmailService,
+    private authService: AuthService,
     @InjectRepository(Manager)
     private managerRepository: Repository<Manager>,
   ) {}
-  randomStrings =
-    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
-
-  async sendEmail(
-    email: string,
-    name: string,
-    managerInform: 'manager' | 'rep',
-  ) {
+  async sendEmail(email: string, name: string) {
     // DB에서 이메일 중복성 확인
     const managerExist = await this.managerRepository.findOne({
       where: { email },
@@ -32,28 +27,14 @@ export class UserService {
     }
     const verifyToken = await this.generateRandomCode();
     await this.emailService.sendVerifyCodeEmail(email, name, verifyToken);
-    console.log(
-      `${email}. db에 추가. 회원이름 : ${name}, 랜덤코드: ${verifyToken}`,
-    );
-    const userId = await this.saveManager(
-      email,
-      name,
-      managerInform,
-      verifyToken,
-    );
+    const userId = await this.saveManager(email, name, verifyToken);
     return { userId };
   }
 
-  private async saveManager(
-    email: string,
-    name: string,
-    managerInform: 'manager' | 'rep',
-    verifyToken: string,
-  ) {
+  private async saveManager(email: string, name: string, verifyToken: string) {
     const manager = Manager.from({
       email,
       name,
-      managerInform,
       verifyToken,
     });
     const { id } = await this.managerRepository.save(manager);
@@ -61,15 +42,10 @@ export class UserService {
   }
 
   private async generateRandomCode() {
-    let randomCode = '';
-    for (let i = 0; i < 6; i++) {
-      const rnum = Math.floor(Math.random() * this.randomStrings.length);
-      randomCode += this.randomStrings.substring(rnum, rnum + 1);
-    }
-    return randomCode;
+    return nanoid.nanoid(6);
   }
 
-  async registManager(email: string, password: string, verifyToken: string) {
+  async registerManager(email: string, password: string, verifyToken: string) {
     const managerExist = await this.managerRepository.findOne({
       where: { email, verifyToken },
     });
@@ -82,5 +58,15 @@ export class UserService {
     return {
       id: managerExist.id,
     };
+  }
+
+  async managerLogin(email: string, password: string) {
+    const managerExist = await this.managerRepository.findOne({
+      where: { email, password },
+    });
+    if (!managerExist) {
+      throw new NotFoundException('유저가 존재하지 않습니다.');
+    }
+    return this.authService.login(managerExist);
   }
 }

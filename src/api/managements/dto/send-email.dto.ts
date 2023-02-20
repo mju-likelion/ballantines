@@ -1,4 +1,4 @@
-import { IsEmail, IsIn, IsString } from 'class-validator';
+import { IsEmail, IsString } from 'class-validator';
 
 export class SendEmailDto {
   @IsEmail()
@@ -6,7 +6,4 @@ export class SendEmailDto {
 
   @IsString()
   name: string;
-
-  @IsIn(['manager', 'rep'])
-  readonly managerInform: 'manager' | 'rep';
 }

@@ -7,8 +7,9 @@ import { ApplicationsModule } from './api/applications/applications.module';
 import { AssetsModule } from './api/assets/assets.module';
 import { generateTypeOrmConfig } from './config/typeorm.config';
 import { validationSchema } from './config/validationSchema';
-import { UserModule } from './api/managements/managements.module';
+import { ManagerModule } from './api/managements/managements.module';
 import { EmailModule } from './api/email/email.module';
+import { AuthModule } from './api/auth/auth.module';
 
 @Module({
   imports: [
@@ -18,8 +19,9 @@ import { EmailModule } from './api/email/email.module';
     TypeOrmModule.forRoot(generateTypeOrmConfig(process.env)),
     ApplicationsModule,
     AssetsModule,
-    UserModule,
+    ManagerModule,
     EmailModule,
+    AuthModule,
     SendGridModule.forRoot({
       apikey: process.env.SENDGRID_API_KEY,
     }),
