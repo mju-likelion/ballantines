@@ -17,7 +17,7 @@ import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { CvFileValidator } from './validators/cv-file.validator';
 import { ApiBody, ApiConsumes } from '@nestjs/swagger';
-import { PaginationQueryDTO } from './dto/PaginationQueryDTO';
+import { PaginationQueryDTO } from './dto/pagination-query.dto';
 
 @Controller('applications')
 export class ApplicationsController {

@@ -10,7 +10,7 @@ import { Repository } from 'typeorm';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
 import { s3Client } from '../../lib/aws';
-import { PaginationQueryDTO } from './dto/PaginationQueryDTO';
+import { PaginationQueryDTO } from './dto/pagination-query.dto';
 
 @Injectable()
 export class ApplicationsService {
