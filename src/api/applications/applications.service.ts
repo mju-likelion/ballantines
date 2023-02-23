@@ -11,6 +11,7 @@ import { Repository } from 'typeorm';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
 import { s3Client } from '../../lib/aws';
+import { PaginationQueryDTO } from './dto/pagination-query.dto';
 
 @Injectable()
 export class ApplicationsService {
@@ -107,6 +108,14 @@ export class ApplicationsService {
     }
   }
 
+  getOrderObject(sortOptions) {
+    if (!sortOptions) return null;
+    const [option, orderValue] = sortOptions.split('_');
+    return {
+      [option]: orderValue,
+    };
+  }
+
   async submitCheck(sid: string, name: string) {
     const application = await this.applicationRepository.findOne({
       where: {
@@ -125,11 +134,54 @@ export class ApplicationsService {
     };
   }
 
-  findAll() {
-    return `This action returns all applications`;
+  async findAll(paginationQueryDTO: PaginationQueryDTO) {
+    const { page, part, sort } = paginationQueryDTO;
+    const PAGE_SIZE = 10;
+    const totalApplicationsCount = await this.applicationRepository.count({
+      ...(part && {
+        where: { part },
+      }),
+    });
+
+    const totalPage = Math.ceil(totalApplicationsCount / PAGE_SIZE);
+    if (!page || totalPage < page) {
+      throw new BadRequestException('Invalid page number');
+    }
+
+    const sortOptions = this.getOrderObject(sort);
+
+    const targetApplications = await this.applicationRepository.find({
+      skip: (+page - 1) * 10,
+      take: PAGE_SIZE,
+      ...(part && {
+        where: {
+          part,
+        },
+      }),
+
+      ...(sort && {
+        order: sortOptions,
+      }),
+    });
+
+    return {
+      meta: {
+        pageSize: PAGE_SIZE,
+        totalApplicationsCount,
+        totalPage,
+        currentPage: +page,
+      },
+      data: targetApplications,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} application`;
+  async findOne(id: string) {
+    const targetApplication = await this.applicationRepository.findOne({
+      where: { id },
+    });
+    if (!targetApplication) {
+      throw new BadRequestException('Invalid ID');
+    }
+    return targetApplication;
   }
 }
