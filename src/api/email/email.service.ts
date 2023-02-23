@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { SendGridService } from '@anchan828/nest-sendgrid';
+import emailConfig from 'src/config/emailConfig';
+import { ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class EmailService {
-  constructor(private readonly sendGrid: SendGridService) {}
+  constructor(
+    @Inject(emailConfig.KEY) readonly config: ConfigType<typeof emailConfig>,
+    private readonly sendGrid: SendGridService,
+  ) {}
 
   async sendVerifyCodeEmail(to: string, name: string, code: string) {
     this.sendHtmlToEmail(
@@ -26,7 +31,7 @@ export class EmailService {
     const mail = {
       to,
       subject,
-      from: process.env.SENDGRID_FROM_EMAIL,
+      from: this.config.SENDGRID_FROM_EMAIL,
       html,
     };
     await this.sendGrid.send(mail);

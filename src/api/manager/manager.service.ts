@@ -6,9 +6,10 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { EmailService } from '../email/email.service';
-import { Manager } from './entities/user.entity';
+import { Manager } from './entities/manager.entity';
 import * as nanoid from 'nanoid';
 import { AuthService } from '../auth/auth.service';
+
 @Injectable()
 export class ManagerService {
   constructor(
@@ -17,6 +18,7 @@ export class ManagerService {
     @InjectRepository(Manager)
     private managerRepository: Repository<Manager>,
   ) {}
+
   async sendEmail(email: string, name: string) {
     // DB에서 이메일 중복성 확인
     const managerExist = await this.managerRepository.findOne({
@@ -61,12 +63,12 @@ export class ManagerService {
   }
 
   async managerLogin(email: string, password: string) {
-    const managerExist = await this.managerRepository.findOne({
+    const manager = await this.managerRepository.findOne({
       where: { email, password },
     });
-    if (!managerExist) {
-      throw new NotFoundException('유저가 존재하지 않습니다.');
+    if (!manager) {
+      throw new NotFoundException('User is not exist');
     }
-    return this.authService.login(managerExist);
+    return this.authService.login(manager);
   }
 }

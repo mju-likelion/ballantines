@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { ManagerService } from './managements.service';
+import { ManagerService } from './manager.service';
 import { SendEmailDto } from './dto/send-email.dto';
 import { PwRegistrationDto } from './dto/pw-registration.dto';
 import { ManagerLoginDto } from './dto/manager-login.dto';

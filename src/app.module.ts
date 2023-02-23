@@ -7,13 +7,17 @@ import { ApplicationsModule } from './api/applications/applications.module';
 import { AssetsModule } from './api/assets/assets.module';
 import { generateTypeOrmConfig } from './config/typeorm.config';
 import { validationSchema } from './config/validationSchema';
-import { ManagerModule } from './api/managements/managements.module';
+import { ManagerModule } from './api/manager/manager.module';
 import { EmailModule } from './api/email/email.module';
 import { AuthModule } from './api/auth/auth.module';
+import authConfig from './config/authConfig';
+import emailConfig from './config/emailConfig';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      isGlobal: true,
+      load: [authConfig, emailConfig],
       validationSchema,
     }),
     TypeOrmModule.forRoot(generateTypeOrmConfig(process.env)),
