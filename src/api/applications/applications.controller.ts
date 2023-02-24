@@ -74,6 +74,11 @@ export class ApplicationsController {
   }
 
   @Get()
+  @ApiResponse({ status: 200, description: '지원서 수신이 정상적으로 완료됨.' })
+  @ApiResponse({
+    status: 400,
+    description: '주어진 sid, name 형태가 적합하지 않음.',
+  })
   @UsePipes(new ValidationPipe({ transform: true }))
   //page를 number로 사용하기 위해서 추가
   findAll(@Query() paginationQueryDTO: PaginationQueryDTO) {
@@ -81,6 +86,7 @@ export class ApplicationsController {
   }
 
   @Get(':id')
+  @ApiResponse({ status: 200, description: '지원서 수신이 정상적으로 완료됨.' })
   findOne(@Param('id') id: string) {
     return this.applicationsService.findOne(id);
   }
