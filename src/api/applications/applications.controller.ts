@@ -8,13 +8,18 @@ import {
   UploadedFile,
   ParseFilePipeBuilder,
   Query,
+  UseGuards,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 
 import { ApplicationsService } from './applications.service';
 import { CreateApplicationDto } from './dto/create-application.dto';
 import { CvFileValidator } from './validators/cv-file.validator';
+import { AuthGuard } from '@nestjs/passport';
 import { ApiBody, ApiConsumes, ApiResponse } from '@nestjs/swagger';
+import { PaginationQueryDTO } from './dto/pagination-query.dto';
 import { SubmitCheckQueryDto } from './dto/submit-check-query.dto';
 
 @Controller('applications')
@@ -71,12 +76,15 @@ export class ApplicationsController {
   }
 
   @Get()
-  findAll() {
-    return this.applicationsService.findAll();
+  @UsePipes(new ValidationPipe({ transform: true }))
+  //page를 number로 사용하기 위해서 추가
+  findAll(@Query() paginationQueryDTO: PaginationQueryDTO) {
+    return this.applicationsService.findAll(paginationQueryDTO);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get(':id')
   findOne(@Param('id') id: string) {
-    return this.applicationsService.findOne(+id);
+    return this.applicationsService.findOne(id);
   }
 }
