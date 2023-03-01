@@ -12,15 +12,17 @@ import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
 import { s3Client } from '../../lib/aws';
 import { PaginationQueryDTO } from './dto/pagination-query.dto';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class ApplicationsService {
   constructor(
     @InjectRepository(Application)
     private applicationRepository: Repository<Application>,
+    private readonly emailService: EmailService,
   ) {}
 
-  async create(createApplicationDto: CreateApplicationDto) {
+  private async create(createApplicationDto: CreateApplicationDto) {
     const { personalInfo, applicationInfo } = createApplicationDto;
 
     const conflictErrors: string[] = [];
@@ -84,6 +86,14 @@ export class ApplicationsService {
     return { id };
   }
 
+  async submit(createApplicationDto: CreateApplicationDto) {
+    const { id } = await this.create(createApplicationDto);
+    await this.emailService.sendApplyNoticeEmail(
+      createApplicationDto.personalInfo.email,
+    );
+    return { id };
+  }
+
   async uploadCv(cv: Express.Multer.File, sid: string) {
     const filename = `${sid}-${cv.originalname.replaceAll(' ', '-')}`;
     const path = `cv/${filename}`;
@@ -143,7 +153,10 @@ export class ApplicationsService {
       }),
     });
 
-    const totalPage = Math.ceil(totalApplicationsCount / PAGE_SIZE);
+    const totalPage =
+      totalApplicationsCount === 0
+        ? 1
+        : Math.ceil(totalApplicationsCount / PAGE_SIZE);
     if (!page || totalPage < page) {
       throw new BadRequestException('Invalid page number');
     }
