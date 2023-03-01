@@ -28,7 +28,7 @@ export class ApplicationsController {
 
   @Post()
   create(@Body() createApplicationDto: CreateApplicationDto) {
-    return this.applicationsService.create(createApplicationDto);
+    return this.applicationsService.submit(createApplicationDto);
   }
 
   @ApiConsumes('multipart/form-data')

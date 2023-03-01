@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { SendGridService } from '@anchan828/nest-sendgrid';
 import emailConfig from 'src/config/emailConfig';
 import { ConfigType } from '@nestjs/config';
+import { applyEmail } from './applyEmail';
 
 @Injectable()
 export class EmailService {
@@ -9,6 +10,14 @@ export class EmailService {
     @Inject(emailConfig.KEY) readonly config: ConfigType<typeof emailConfig>,
     private readonly sendGrid: SendGridService,
   ) {}
+
+  async sendApplyNoticeEmail(to: string) {
+    await this.sendHtmlToEmail(
+      to,
+      `멋쟁이사자처럼 명지대(자연) 지원 완료 안내`,
+      applyEmail,
+    );
+  }
 
   async sendVerifyCodeEmail(to: string, name: string, code: string) {
     this.sendHtmlToEmail(

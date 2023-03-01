@@ -12,15 +12,17 @@ import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
 import { s3Client } from '../../lib/aws';
 import { PaginationQueryDTO } from './dto/pagination-query.dto';
+import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class ApplicationsService {
   constructor(
     @InjectRepository(Application)
     private applicationRepository: Repository<Application>,
+    private readonly emailService: EmailService,
   ) {}
 
-  async create(createApplicationDto: CreateApplicationDto) {
+  private async create(createApplicationDto: CreateApplicationDto) {
     const { personalInfo, applicationInfo } = createApplicationDto;
 
     const conflictErrors: string[] = [];
@@ -81,6 +83,14 @@ export class ApplicationsService {
     });
 
     const { id } = await this.applicationRepository.save(application);
+    return { id };
+  }
+
+  async submit(createApplicationDto: CreateApplicationDto) {
+    const { id } = await this.create(createApplicationDto);
+    await this.emailService.sendApplyNoticeEmail(
+      createApplicationDto.personalInfo.email,
+    );
     return { id };
   }
 
