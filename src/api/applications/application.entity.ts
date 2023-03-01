@@ -23,7 +23,7 @@ type ApplicationForm = {
   fifthAnswer: string;
 };
 
-@Entity('Application')
+@Entity('Applications')
 export class Application {
   @PrimaryGeneratedColumn('uuid')
   id: string;
