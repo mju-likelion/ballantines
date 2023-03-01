@@ -143,7 +143,10 @@ export class ApplicationsService {
       }),
     });
 
-    const totalPage = Math.ceil(totalApplicationsCount / PAGE_SIZE);
+    const totalPage =
+      totalApplicationsCount === 0
+        ? 1
+        : Math.ceil(totalApplicationsCount / PAGE_SIZE);
     if (!page || totalPage < page) {
       throw new BadRequestException('Invalid page number');
     }
