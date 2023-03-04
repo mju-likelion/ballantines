@@ -12,11 +12,13 @@ import { CreateApplicationDto } from './dto/create-application.dto';
 import { Application } from './application.entity';
 import { s3Client } from '../../lib/aws';
 import { PaginationQueryDTO } from './dto/pagination-query.dto';
+import { SlackbotService } from '../slackbot/slackbot.service';
 import { EmailService } from '../email/email.service';
 
 @Injectable()
 export class ApplicationsService {
   constructor(
+    private slackbotService: SlackbotService,
     @InjectRepository(Application)
     private applicationRepository: Repository<Application>,
     private readonly emailService: EmailService,
@@ -87,10 +89,10 @@ export class ApplicationsService {
   }
 
   async submit(createApplicationDto: CreateApplicationDto) {
+    const { name, part, email } = createApplicationDto.personalInfo;
     const { id } = await this.create(createApplicationDto);
-    await this.emailService.sendApplyNoticeEmail(
-      createApplicationDto.personalInfo.email,
-    );
+    await this.emailService.sendApplyNoticeEmail(email);
+    await this.slackbotService.sendSlackApplicationNotific(name, part);
     return { id };
   }
 

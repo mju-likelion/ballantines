@@ -75,6 +75,7 @@ export class ApplicationsController {
     return this.applicationsService.submitCheck(sid, name);
   }
 
+  @UseGuards(AuthGuard('jwt'))
   @Get()
   @UsePipes(new ValidationPipe({ transform: true }))
   //page를 number로 사용하기 위해서 추가
