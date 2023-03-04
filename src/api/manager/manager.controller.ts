@@ -17,12 +17,8 @@ export class ManagerController {
 
   @Post('register')
   async registerManager(@Body() pwRegistrationDto: PwRegistrationDto) {
-    const { email, password, verifyToken } = pwRegistrationDto;
-    return await this.managerService.registerManager(
-      email,
-      password,
-      verifyToken,
-    );
+    const { password, verifyToken } = pwRegistrationDto;
+    return await this.managerService.registerManager(password, verifyToken);
   }
 
   @Post('login')

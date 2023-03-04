@@ -47,16 +47,16 @@ export class ManagerService {
     return nanoid.nanoid(6);
   }
 
-  async registerManager(email: string, password: string, verifyToken: string) {
+  async registerManager(password: string, verifyToken: string) {
     const managerExist = await this.managerRepository.findOne({
-      where: { email, verifyToken },
+      where: { verifyToken },
     });
     if (!managerExist) {
       throw new NotFoundException('User is not exist');
     } else if (managerExist.password) {
       throw new BadRequestException('User password is already registered');
     }
-    await this.managerRepository.update({ email }, { password });
+    await this.managerRepository.update({ verifyToken }, { password });
     return {
       id: managerExist.id,
     };
