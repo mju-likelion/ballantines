@@ -12,12 +12,13 @@ import { EmailModule } from './api/email/email.module';
 import { AuthModule } from './api/auth/auth.module';
 import authConfig from './config/authConfig';
 import emailConfig from './config/emailConfig';
+import slackbotConfig from './config/slackbotConfig';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [authConfig, emailConfig],
+      load: [authConfig, emailConfig, slackbotConfig],
       validationSchema,
     }),
     TypeOrmModule.forRoot(generateTypeOrmConfig(process.env)),

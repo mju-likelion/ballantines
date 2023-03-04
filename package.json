@@ -33,6 +33,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/swagger": "^6.2.1",
     "@nestjs/typeorm": "^9.0.1",
+    "@slack/web-api": "^6.8.1",
     "@types/bcrypt": "^5.0.0",
     "@types/passport-local": "^1.0.35",
     "bcrypt": "^5.1.0",
