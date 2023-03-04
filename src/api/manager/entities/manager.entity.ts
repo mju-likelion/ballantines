@@ -17,10 +17,10 @@ export class Manager {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ select: false })
   password: string;
 
-  @Column()
+  @Column({ select: false })
   verifyToken: string;
 
   static from({ name, email, verifyToken }: ManagerForm): Manager {
