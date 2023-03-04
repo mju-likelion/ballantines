@@ -4,7 +4,7 @@ import { SendEmailDto } from './dto/send-email.dto';
 import { PwRegistrationDto } from './dto/pw-registration.dto';
 import { ManagerLoginDto } from './dto/manager-login.dto';
 
-@Controller('management')
+@Controller('managers')
 export class ManagerController {
   constructor(private readonly managerService: ManagerService) {}
 
