@@ -97,7 +97,9 @@ export class ApplicationsService {
   }
 
   async uploadCv(cv: Express.Multer.File, sid: string) {
-    const filename = `${sid}-${cv.originalname.replaceAll(' ', '-')}`;
+    const filename = `${sid}-${Buffer.from(cv.originalname, 'latin1')
+      .toString('utf-8')
+      .replaceAll(' ', '-')}`;
     const path = `cv/${filename}`;
 
     try {
