@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode } from '@nestjs/common';
 import { ManagerService } from './manager.service';
 import { SendEmailDto } from './dto/send-email.dto';
 import { PwRegistrationDto } from './dto/pw-registration.dto';
@@ -22,6 +22,7 @@ export class ManagerController {
   }
 
   @Post('login')
+  @HttpCode(200)
   async login(@Body() managerLoginDto: ManagerLoginDto) {
     const { email, password } = managerLoginDto;
     return await this.managerService.managerLogin(email, password);
