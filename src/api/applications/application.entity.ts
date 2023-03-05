@@ -58,19 +58,19 @@ export class Application {
   @Column({ length: 512 })
   cvUrl: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 1000 })
   firstAnswer: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 1000 })
   secondAnswer: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 1000 })
   thirdAnswer: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 1000 })
   fourthAnswer: string;
 
-  @Column({ nullable: true })
+  @Column({ nullable: true, length: 1000 })
   fifthAnswer: string;
 
   @CreateDateColumn()
