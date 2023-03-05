@@ -20,7 +20,7 @@ export class Manager {
   @Column({ select: false })
   password: string;
 
-  @Column({ select: false })
+  @Column({ select: false, unique: true })
   verifyToken: string;
 
   static from({ name, email, verifyToken }: ManagerForm): Manager {
