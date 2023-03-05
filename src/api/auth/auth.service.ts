@@ -2,8 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Inject, Injectable } from '@nestjs/common';
 import authConfig from 'src/config/authConfig';
 import { ConfigType } from '@nestjs/config';
-import { ManagerService } from '../manager/manager.service';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Manager } from '../manager/entities/manager.entity';
 import { Repository } from 'typeorm';
@@ -31,6 +30,10 @@ export class AuthService {
         expiresIn: this.config.expiresIn,
       }),
     };
+  }
+
+  async encryptPassword(password: string) {
+    return await hash(password, 10);
   }
 
   async validateUser(email: string, password: string) {

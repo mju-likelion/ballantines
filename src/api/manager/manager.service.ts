@@ -56,7 +56,13 @@ export class ManagerService {
     } else if (managerExist.password) {
       throw new BadRequestException('User password is already registered');
     }
-    await this.managerRepository.update({ verifyToken }, { password });
+
+    const hashedPassword = await this.authService.encryptPassword(password);
+
+    await this.managerRepository.update(
+      { verifyToken },
+      { password: hashedPassword, verifyToken: null },
+    );
     return {
       id: managerExist.id,
     };
