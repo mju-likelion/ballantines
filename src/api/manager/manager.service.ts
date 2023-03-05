@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -69,11 +70,15 @@ export class ManagerService {
   }
 
   async managerLogin(email: string, password: string) {
-    const manager = await this.managerRepository.findOne({
-      where: { email, password },
+    const emailExist = await this.managerRepository.findOne({
+      where: { email },
     });
-    if (!manager) {
+    if (!emailExist) {
       throw new NotFoundException('User is not exist');
+    }
+    const manager = await this.authService.validateUser(email, password);
+    if (!manager) {
+      throw new UnauthorizedException('Password is not correct');
     }
     return this.authService.login(manager);
   }

@@ -39,8 +39,10 @@ export class AuthService {
   async validateUser(email: string, password: string) {
     const user = await this.managerRepository.findOne({
       where: { email },
+      select: { password: true },
     });
-    if (!user || (user && !compare(password, user.password))) return null;
+    const isMatch = await compare(password, user.password);
+    if (!user || (user && !isMatch)) return null;
     return user;
   }
 }
