@@ -25,7 +25,7 @@ export class ManagerService {
       where: { email },
     });
     if (managerExist) {
-      throw new BadRequestException('User is arleady exist');
+      throw new BadRequestException('User is already exist');
     }
     const verifyToken = await this.generateRandomCode();
     await this.emailService.sendVerifyCodeEmail(email, name, verifyToken);
@@ -54,7 +54,7 @@ export class ManagerService {
     if (!managerExist) {
       throw new NotFoundException('User is not exist');
     } else if (managerExist.password) {
-      throw new BadRequestException('User password is arleady reigistered');
+      throw new BadRequestException('User password is already registered');
     }
     await this.managerRepository.update({ email }, { password });
     return {
