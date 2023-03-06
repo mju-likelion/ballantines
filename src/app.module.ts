@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SendGridModule } from '@anchan828/nest-sendgrid';
+import { LoggerModule } from 'nestjs-pino';
 
 import { ApplicationsModule } from './api/applications/applications.module';
 import { AssetsModule } from './api/assets/assets.module';
@@ -16,6 +17,7 @@ import slackbotConfig from './config/slackbotConfig';
 
 @Module({
   imports: [
+    LoggerModule.forRoot(),
     ConfigModule.forRoot({
       isGlobal: true,
       load: [authConfig, emailConfig, slackbotConfig],
