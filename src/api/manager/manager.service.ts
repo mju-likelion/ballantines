@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -47,27 +48,37 @@ export class ManagerService {
     return nanoid.nanoid(6);
   }
 
-  async registerManager(email: string, password: string, verifyToken: string) {
+  async registerManager(password: string, verifyToken: string) {
     const managerExist = await this.managerRepository.findOne({
-      where: { email, verifyToken },
+      where: { verifyToken },
     });
     if (!managerExist) {
       throw new NotFoundException('User is not exist');
     } else if (managerExist.password) {
       throw new BadRequestException('User password is already registered');
     }
-    await this.managerRepository.update({ email }, { password });
+
+    const hashedPassword = await this.authService.encryptPassword(password);
+
+    await this.managerRepository.update(
+      { verifyToken },
+      { password: hashedPassword, verifyToken: null },
+    );
     return {
       id: managerExist.id,
     };
   }
 
   async managerLogin(email: string, password: string) {
-    const manager = await this.managerRepository.findOne({
-      where: { email, password },
+    const emailExist = await this.managerRepository.findOne({
+      where: { email },
     });
-    if (!manager) {
+    if (!emailExist) {
       throw new NotFoundException('User is not exist');
+    }
+    const manager = await this.authService.validateUser(email, password);
+    if (!manager) {
+      throw new UnauthorizedException('Password is not correct');
     }
     return this.authService.login(manager);
   }
