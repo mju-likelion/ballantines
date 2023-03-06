@@ -2,8 +2,7 @@ import { JwtService } from '@nestjs/jwt';
 import { Inject, Injectable } from '@nestjs/common';
 import authConfig from 'src/config/authConfig';
 import { ConfigType } from '@nestjs/config';
-import { ManagerService } from '../manager/manager.service';
-import { compare } from 'bcrypt';
+import { compare, hash } from 'bcrypt';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Manager } from '../manager/entities/manager.entity';
 import { Repository } from 'typeorm';
@@ -33,11 +32,17 @@ export class AuthService {
     };
   }
 
+  async encryptPassword(password: string) {
+    return await hash(password, 10);
+  }
+
   async validateUser(email: string, password: string) {
     const user = await this.managerRepository.findOne({
       where: { email },
+      select: { password: true },
     });
-    if (!user || (user && !compare(password, user.password))) return null;
+    const isMatch = await compare(password, user.password);
+    if (!user || (user && !isMatch)) return null;
     return user;
   }
 }
